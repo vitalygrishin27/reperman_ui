@@ -1,25 +1,45 @@
-import logo from './logo.svg';
 import './App.css';
+import {Provider} from "react-redux";
+import {applyMiddleware, compose, createStore} from "redux";
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import rootReducer from "./component/store/reducers";
+import thunk from 'redux-thunk';
+import {Container, Row, Col} from 'react-bootstrap';
+import Welcome from "./component/Welcome";
+import SongContainer from "./container/SongContainer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const store = configureStore();
+
+export default function App() {
+    const marginTop = {
+        marginTop: "20px"
+    };
+    return (
+        <Provider store={store}>
+            <Router>
+                <Container>
+                    <Row>
+                        <Col lg={12} style={marginTop}>
+                            <Switch>
+                                <Route path={"/"} exact component={Welcome}/>
+                                <Route path={"/songs"} exact component={SongContainer}/>
+                            </Switch>
+                        </Col>
+                    </Row>
+                </Container>
+            </Router>
+        </Provider>
+    );
 }
 
-export default App;
+
+function configureStore(initialState) {
+    return createStore(
+        rootReducer,
+        initialState,
+        compose(
+            applyMiddleware(thunk),
+            window.devToolsExtension ? window.devToolsExtension() : f => f
+        )
+    );
+}
