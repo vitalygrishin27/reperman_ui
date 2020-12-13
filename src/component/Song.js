@@ -165,7 +165,7 @@ export default class Song extends Component {
         const {songId, instrument} = this.props;
         const {songList, song, activeImage, showToast, error, message} = this.state;
         return (
-            <div style={{"width": "800px", "height": "1280px"}}>
+            <div style={{"margin": 0}}>
                 <div style={{"display": showToast ? "block" : "none"}}>
                     <ToastMessage
                         showToast={showToast}
@@ -174,7 +174,7 @@ export default class Song extends Component {
                     />
                 </div>
                 <Form>
-                    <div>
+                    <div style={{"margin": 0}}>
                         <Form.Control
                             style={{"width": "100%", "fontSize": 32}}
                             as="select"

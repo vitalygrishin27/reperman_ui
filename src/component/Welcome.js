@@ -32,7 +32,7 @@ export default class Welcome extends Component {
 
     render() {
         return (
-            <div className="App">
+            <div className="App" style={{"margin": 0}}>
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo"/>
                     <Button className="card-group"
