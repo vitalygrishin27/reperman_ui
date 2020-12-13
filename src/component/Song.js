@@ -20,12 +20,14 @@ export default class Song extends Component {
             error: false,
             message: '',
             songList: [],
-            song: {}
+            song: {},
+            activeImage: '',
         };
         this.changeSong = this.changeSong.bind(this);
         this.changeSongList = this.changeSongList.bind(this);
         this.changeSongId = this.changeSongId.bind(this);
         this.changeInstrument = this.changeInstrument.bind(this);
+        this.getActiveImageOrDefault = this.getActiveImageOrDefault.bind(this);
     }
 
     changeSong(event) {
@@ -33,7 +35,7 @@ export default class Song extends Component {
     }
 
     changeSongId(event) {
-        if(event.target.value === -1) return;
+        if (event.target.value === -1) return;
         this.props.changeSongId(event.target.value);
         this.fetchSongById(event.target.value);
     }
@@ -42,15 +44,94 @@ export default class Song extends Component {
         this.props.changeSongList(songList);
     }
 
-    changeInstrument(instrument) {
-        this.props.changeInstrument(instrument);
+    changeInstrument(event) {
+        this.setState({
+            instrument: event.target.value,
+            activeImage: this.getActiveImageOrDefault(event.target.value)
+        })
+        this.props.changeInstrument(event.target.value);
+    }
+
+    getActiveImageOrDefault(instrument, newSongAfterFetch) {
+        let result;
+        let song;
+        if (newSongAfterFetch) {
+            song = newSongAfterFetch;
+            result = "data:image/png;base64," + song.mainPicture;
+        } else {
+            song=this.state.song;
+            result = "data:image/png;base64," + this.state.song.mainPicture;
+        }
+        console.log(song && song.parts && song.parts.length > 0)
+        switch (instrument) {
+            case 'PIANO':
+                if (song && song.parts && song.parts.length > 0) {
+                    song.parts.forEach(function callback(part) {
+                        if (part.instrument === "PIANO") {
+                            result = "data:image/png;base64," + part.picture;
+                        }
+                    })
+                }
+                break;
+            case 'GUITAR':
+                if (song && song.parts && song.parts.length > 0) {
+                    song.parts.forEach(function callback(part) {
+                        if (part.instrument === "GUITAR") {
+                            result = "data:image/png;base64," + part.picture;
+                        }
+                    })
+                }
+                break;
+            case 'BAS':
+                if (song && song.parts && song.parts.length > 0) {
+                    song.parts.forEach(function callback(part) {
+                        if (part.instrument === "BAS") {
+                            result = "data:image/png;base64," + part.picture;
+                        }
+                    })
+                }
+                break;
+            case 'DRUMS':
+                if (song && song.parts && song.parts.length > 0) {
+                    song.parts.forEach(function callback(part) {
+                        if (part.instrument === "DRUMS") {
+                            result = "data:image/png;base64," + part.picture;
+                        }
+                    })
+                }
+                break;
+            case 'RHYTHM_GUITAR':
+                if (song && song.parts && song.parts.length > 0) {
+                    song.parts.forEach(function callback(part) {
+                        if (part.instrument === "RHYTHM_GUITAR") {
+                            result = "data:image/png;base64," + part.picture;
+                        }
+                    })
+                }
+                break;
+            case 'LYRICS':
+                if (song && song.parts && song.parts.length > 0) {
+                    song.parts.forEach(function callback(part) {
+                        if (part.instrument === "LYRICS") {
+                            result = "data:image/png;base64," + part.picture;
+                        }
+                    })
+                }
+                break;
+            default:
+                result = "data:image/png;base64," + song.mainPicture;
+        }
+        return result;
     }
 
     fetchSongById = (songId) => {
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT) + "/" + songId, getOptions())
             .then(response => {
                 this.props.changeSong(response.data);
-                this.setState({song: response.data})
+                this.setState({
+                    song: response.data,
+                    activeImage: this.getActiveImageOrDefault(this.state.instrument, response.data)
+                });
             })
             .catch((error) => {
                 console.error("Error" + error);
@@ -82,9 +163,9 @@ export default class Song extends Component {
 
     render() {
         const {songId, instrument} = this.props;
-        const {songList, song, showToast, error, message} = this.state;
+        const {songList, song, activeImage, showToast, error, message} = this.state;
         return (
-            <div style={{"width":"800px", "height":"1280px"}}>
+            <div style={{"width": "800px", "height": "1280px"}}>
                 <div style={{"display": showToast ? "block" : "none"}}>
                     <ToastMessage
                         showToast={showToast}
@@ -95,7 +176,7 @@ export default class Song extends Component {
                 <Form>
                     <div>
                         <Form.Control
-                            style={{"width":"100%", "fontSize":32}}
+                            style={{"width": "100%", "fontSize": 32}}
                             as="select"
                             onChange={this.changeSongId}
                             id="inputSong"
@@ -112,9 +193,39 @@ export default class Song extends Component {
                     </div>
                     <div>
                         <FormLabel key={song.id}>
-                            <Image src={"data:image/png;base64," + song.mainPicture} width={"100%"}
+                            <Image src={activeImage} width={"100%"}
                                    height={"100%"}/>
                         </FormLabel>
+                    </div>
+                    <div>
+                        <Form.Control
+                            style={{"width": "100%", "fontSize": 22}}
+                            as="select"
+                            onChange={this.changeInstrument}
+                            id="inputInstrument"
+                            aria-describedby="inputInstrumentHelpInline">
+                            <option key={"Default"} value={"Default"}>
+                                Default
+                            </option>
+                            <option key={"BAS"} value={"BAS"}>
+                                BAS
+                            </option>
+                            <option key={"PIANO"} value={"PIANO"}>
+                                PIANO
+                            </option>
+                            <option key={"DRUMS"} value={"DRUMS"}>
+                                DRUMS
+                            </option>
+                            <option key={"RHYTHM_GUITAR"} value={"RHYTHM_GUITAR"}>
+                                RHYTHM_GUITAR
+                            </option>
+                            <option key={"GUITAR"} value={"GUITAR"}>
+                                GUITAR
+                            </option>
+                            <option key={"LYRICS"} value={"LYRICS"}>
+                                LYRICS
+                            </option>
+                        </Form.Control>
                     </div>
                 </Form>
             </div>
