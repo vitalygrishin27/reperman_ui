@@ -17,7 +17,7 @@ export default function App() {
     return (
         <Provider store={store}>
             <Router>
-                <Container>
+
                     <Row>
                         <Col lg={12} style={marginTop}>
                             <Switch>
@@ -26,7 +26,7 @@ export default function App() {
                             </Switch>
                         </Col>
                     </Row>
-                </Container>
+
             </Router>
         </Provider>
     );

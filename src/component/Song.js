@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, Col, Form, FormLabel, Image} from "react-bootstrap";
+import {Form, Image} from "react-bootstrap";
 import axios from 'axios';
 import ToastMessage from "./ToastMessage";
 import {getEndpoint, getOptions, SONG_MAIN_ENDPOINT} from "./Welcome";
@@ -8,10 +8,8 @@ import {getEndpoint, getOptions, SONG_MAIN_ENDPOINT} from "./Welcome";
 export default class Song extends Component {
 
     componentDidMount() {
-        localStorage.setItem("host", "http://localhost:1001/");
         this.fetchRepertoire();
     }
-
 
     constructor(props) {
         super(props);
@@ -52,6 +50,19 @@ export default class Song extends Component {
         this.props.changeInstrument(event.target.value);
     }
 
+    setActiveSongOnServer = (songId) => {
+        axios.put(getEndpoint(SONG_MAIN_ENDPOINT) + "/" + songId, getOptions())
+            .catch((error) => {
+                console.error("Error" + error);
+                this.setState({
+                    showToast: true,
+                    error: true,
+                    message: 'Set active song on server error'
+                });
+              //  setTimeout(() => this.setState({showToast: false}), 3000);
+            });
+    }
+
     getActiveImageOrDefault(instrument, newSongAfterFetch) {
         let result;
         let song;
@@ -59,7 +70,7 @@ export default class Song extends Component {
             song = newSongAfterFetch;
             result = "data:image/png;base64," + song.mainPicture;
         } else {
-            song=this.state.song;
+            song = this.state.song;
             result = "data:image/png;base64," + this.state.song.mainPicture;
         }
         console.log(song && song.parts && song.parts.length > 0)
@@ -132,15 +143,16 @@ export default class Song extends Component {
                     song: response.data,
                     activeImage: this.getActiveImageOrDefault(this.state.instrument, response.data)
                 });
+                this.setActiveSongOnServer(response.data.id);
             })
             .catch((error) => {
                 console.error("Error" + error);
                 this.setState({
-                    show: true,
+                    showToast: true,
                     error: true,
                     message: 'Fetching error'
                 });
-                setTimeout(() => this.setState({"show": false}), 3000);
+             //   setTimeout(() => this.setState({showToast: false}), 3000);
             });
     }
 
@@ -153,11 +165,11 @@ export default class Song extends Component {
             .catch((error) => {
                 console.error("Error" + error);
                 this.setState({
-                    show: true,
+                    showToast: true,
                     error: true,
                     message: 'Fetching error'
                 });
-                setTimeout(() => this.setState({"show": false}), 3000);
+              //  setTimeout(() => this.setState({showToast: false}), 3000);
             });
     }
 
@@ -191,12 +203,12 @@ export default class Song extends Component {
                             ))}
                         </Form.Control>
                     </div>
-                    <div>
-                        <FormLabel key={song.id}>
+
+
                             <Image src={activeImage} width={"100%"}
                                    height={"100%"}/>
-                        </FormLabel>
-                    </div>
+
+
                     <div>
                         <Form.Control
                             style={{"width": "100%", "fontSize": 22}}
