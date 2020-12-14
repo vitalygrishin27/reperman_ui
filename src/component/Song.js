@@ -34,7 +34,7 @@ export default class Song extends Component {
     }
 
     changeSongId(event) {
-        if (event.target.value === -1) return;
+        if (event.target.value == -1) return;
         this.props.changeSongId(event.target.value);
         //this.fetchSongById(event.target.value);
         this.setActiveSongOnServer(event.target.value);
