@@ -19,7 +19,7 @@ export default function App() {
             <Router>
 
                     <Row>
-                        <Col lg={12} style={marginTop}>
+                        <Col>
                             <Switch>
                                 <Route path={"/"} exact component={Welcome}/>
                                 <Route path={"/songs"} exact component={SongContainer}/>

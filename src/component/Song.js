@@ -26,6 +26,7 @@ export default class Song extends Component {
         this.changeSongId = this.changeSongId.bind(this);
         this.changeInstrument = this.changeInstrument.bind(this);
         this.getActiveImageOrDefault = this.getActiveImageOrDefault.bind(this);
+        this.checkActiveSongOnServer = this.checkActiveSongOnServer.bind(this);
     }
 
     changeSong(event) {
@@ -59,7 +60,7 @@ export default class Song extends Component {
                     error: true,
                     message: 'Set active song on server error'
                 });
-              //  setTimeout(() => this.setState({showToast: false}), 3000);
+                //  setTimeout(() => this.setState({showToast: false}), 3000);
             });
     }
 
@@ -152,7 +153,26 @@ export default class Song extends Component {
                     error: true,
                     message: 'Fetching error'
                 });
-             //   setTimeout(() => this.setState({showToast: false}), 3000);
+                //   setTimeout(() => this.setState({showToast: false}), 3000);
+            });
+    }
+
+    checkActiveSongOnServer = () => {
+        console.log("Check active song on server");
+        axios.get(getEndpoint(SONG_MAIN_ENDPOINT) + "/activeId", getOptions())
+            .then(response => {
+                if (this.state.song.id !== response.data) {
+                    this.fetchSongById(response.data);
+                }
+            })
+            .catch((error) => {
+                console.error("Error" + error);
+                this.setState({
+                    showToast: true,
+                    error: true,
+                    message: 'Fetching active song error'
+                });
+                //   setTimeout(() => this.setState({showToast: false}), 3000);
             });
     }
 
@@ -161,6 +181,7 @@ export default class Song extends Component {
             .then(response => {
                 this.setState({songList: response.data})
                 this.props.changeSongList(response.data);
+                setInterval(() => this.checkActiveSongOnServer(), 3000);
             })
             .catch((error) => {
                 console.error("Error" + error);
@@ -169,7 +190,7 @@ export default class Song extends Component {
                     error: true,
                     message: 'Fetching error'
                 });
-              //  setTimeout(() => this.setState({showToast: false}), 3000);
+                //  setTimeout(() => this.setState({showToast: false}), 3000);
             });
     }
 
@@ -205,8 +226,8 @@ export default class Song extends Component {
                     </div>
 
 
-                            <Image src={activeImage} width={"100%"}
-                                   height={"100%"}/>
+                    <Image src={activeImage} width={"100%"}
+                           height={"100%"}/>
 
 
                     <div>
