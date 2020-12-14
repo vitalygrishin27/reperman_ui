@@ -189,6 +189,7 @@ export default class Song extends Component {
                     error: true,
                     message: 'Fetching active song error'
                 });
+                this.setState({needCheckSong: true});
                 //   setTimeout(() => this.setState({showToast: false}), 3000);
             });
     }
