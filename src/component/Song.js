@@ -26,7 +26,6 @@ export default class Song extends Component {
         this.changeSongId = this.changeSongId.bind(this);
         this.changeInstrument = this.changeInstrument.bind(this);
         this.getActiveImageOrDefault = this.getActiveImageOrDefault.bind(this);
-        this.checkActiveSongOnServer = this.checkActiveSongOnServer.bind(this);
     }
 
     changeSong(event) {
@@ -37,6 +36,7 @@ export default class Song extends Component {
         if (event.target.value === -1) return;
         this.props.changeSongId(event.target.value);
         this.fetchSongById(event.target.value);
+        this.setActiveSongOnServer(event.target.value);
     }
 
     changeSongList(songList) {
@@ -52,6 +52,7 @@ export default class Song extends Component {
     }
 
     setActiveSongOnServer = (songId) => {
+       console.log("set active song with id="+songId)
         axios.put(getEndpoint(SONG_MAIN_ENDPOINT) + "/" + songId, getOptions())
             .catch((error) => {
                 console.error("Error" + error);
@@ -144,7 +145,6 @@ export default class Song extends Component {
                     song: response.data,
                     activeImage: this.getActiveImageOrDefault(this.state.instrument, response.data)
                 });
-                this.setActiveSongOnServer(response.data.id);
             })
             .catch((error) => {
                 console.error("Error" + error);
@@ -157,7 +157,7 @@ export default class Song extends Component {
             });
     }
 
-    checkActiveSongOnServer = () => {
+  checkActiveSongOnServer = () => {
         console.log("Check active song on server");
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT) + "/activeId", getOptions())
             .then(response => {
@@ -181,7 +181,7 @@ export default class Song extends Component {
             .then(response => {
                 this.setState({songList: response.data})
                 this.props.changeSongList(response.data);
-                setInterval(() => this.checkActiveSongOnServer(), 3000);
+                setInterval(this.checkActiveSongOnServer, 3000);
             })
             .catch((error) => {
                 console.error("Error" + error);
