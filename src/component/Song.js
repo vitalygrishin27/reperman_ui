@@ -220,7 +220,7 @@ export default class Song extends Component {
      //   const {songId, instrument} = this.props;
         const {songList, activeImage, showToast, error, message} = this.state;
         return (
-            <div style={{"margin": 0}}>
+            <div style={{"margin": 0}} className="Song">
                 <div style={{"display": showToast ? "block" : "none"}}>
                     <ToastMessage
                         showToast={showToast}
