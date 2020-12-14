@@ -20,6 +20,7 @@ export default class Song extends Component {
             songList: [],
             song: {},
             activeImage: '',
+            needCheckSong: true,
         };
         this.changeSong = this.changeSong.bind(this);
         this.changeSongList = this.changeSongList.bind(this);
@@ -35,7 +36,7 @@ export default class Song extends Component {
     changeSongId(event) {
         if (event.target.value === -1) return;
         this.props.changeSongId(event.target.value);
-        this.fetchSongById(event.target.value);
+        //this.fetchSongById(event.target.value);
         this.setActiveSongOnServer(event.target.value);
     }
 
@@ -52,8 +53,11 @@ export default class Song extends Component {
     }
 
     setActiveSongOnServer = (songId) => {
-       console.log("set active song with id="+songId)
+        console.log("set active song with id=" + songId)
         axios.put(getEndpoint(SONG_MAIN_ENDPOINT) + "/" + songId, getOptions())
+            .then(response => {
+                console.log("setting nwe song is successful")
+            })
             .catch((error) => {
                 console.error("Error" + error);
                 this.setState({
@@ -157,13 +161,24 @@ export default class Song extends Component {
             });
     }
 
-  checkActiveSongOnServer = () => {
-        console.log("Check active song on server");
+    checkActiveSongOnServer = () => {
+        if (this.state.needCheckSong) {
+            console.log("Check active song on server");
+            this.setState({needCheckSong:false});
+        } else {
+            console.log("Waiting previous result of check");
+            return;
+        }
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT) + "/activeId", getOptions())
             .then(response => {
                 if (this.state.song.id !== response.data) {
+                    console.log("CheckActiveSongOnServer. old song=" + this.state.song.id + " on server song=" + response.data)
+                    this.changeSelectBox(response.data);
                     this.fetchSongById(response.data);
+                } else {
+                    console.log("CheckActiveSongOnServer. SAME song=" + this.state.song.id + " on server song=" + response.data)
                 }
+                this.setState({needCheckSong:true});
             })
             .catch((error) => {
                 console.error("Error" + error);
@@ -176,12 +191,19 @@ export default class Song extends Component {
             });
     }
 
+    changeSelectBox = (optionId) => {
+
+    }
     fetchRepertoire = () => {
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT), getOptions())
             .then(response => {
                 this.setState({songList: response.data})
                 this.props.changeSongList(response.data);
-                setInterval(this.checkActiveSongOnServer, 3000);
+                if (this.state.intervalID) {
+                    clearInterval(this.state.intervalID);
+                }
+                const intervalID = setInterval(this.checkActiveSongOnServer, 3000);
+                this.setState({intervalID: intervalID})
             })
             .catch((error) => {
                 console.error("Error" + error);
@@ -195,8 +217,8 @@ export default class Song extends Component {
     }
 
     render() {
-        const {songId, instrument} = this.props;
-        const {songList, song, activeImage, showToast, error, message} = this.state;
+     //   const {songId, instrument} = this.props;
+        const {songList, activeImage, showToast, error, message} = this.state;
         return (
             <div style={{"margin": 0}}>
                 <div style={{"display": showToast ? "block" : "none"}}>
@@ -218,7 +240,7 @@ export default class Song extends Component {
                                 Select song
                             </option>
                             {songList.map((song, count) => (
-                                <option key={count} value={song.id}>
+                                <option id={song.id} key={count} value={song.id}>
                                     {song.name}
                                 </option>
                             ))}

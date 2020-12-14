@@ -4,16 +4,16 @@ import './App.css';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 //import rootReducer from "./component/store/reducers";
 //import thunk from 'redux-thunk';
-import {Container, Row, Col} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import Welcome from "./component/Welcome";
 import SongContainer from "./container/SongContainer";
 
 //const store = configureStore();
 
 export default function App() {
-    const marginTop = {
+  /*  const marginTop = {
         marginTop: "20px"
-    };
+    };*/
     return (
             <Router>
                     <Row>
