@@ -192,7 +192,7 @@ export default class Song extends Component {
     }
 
     changeSelectBox = (optionId) => {
-
+        document.getElementById(optionId).selected=true;
     }
     fetchRepertoire = () => {
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT), getOptions())
