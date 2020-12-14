@@ -27,7 +27,7 @@ export const SONG_MAIN_ENDPOINT = 'SONG_MAIN_ENDPOINT';
 export default class Welcome extends Component {
     componentDidMount() {
       //  localStorage.setItem("fullHouseHost", "http://localhost:1001/reperman/")
-        localStorage.setItem("fullHouseHost", "http://reperman.herokuapp.com/reperman/")
+        localStorage.setItem("fullHouseHost", "https://reperman.herokuapp.com/reperman/")
     }
 
     render() {
