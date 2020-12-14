@@ -3,6 +3,7 @@ import {Form, Image} from "react-bootstrap";
 import axios from 'axios';
 import ToastMessage from "./ToastMessage";
 import {getEndpoint, getOptions, SONG_MAIN_ENDPOINT} from "./Welcome";
+import logo from "../Loading.png";
 
 
 export default class Song extends Component {
@@ -27,6 +28,7 @@ export default class Song extends Component {
         this.changeSongId = this.changeSongId.bind(this);
         this.changeInstrument = this.changeInstrument.bind(this);
         this.getActiveImageOrDefault = this.getActiveImageOrDefault.bind(this);
+        this.closeToast = this.closeToast.bind(this);
     }
 
     changeSong(event) {
@@ -164,7 +166,7 @@ export default class Song extends Component {
     checkActiveSongOnServer = () => {
         if (this.state.needCheckSong) {
             console.log("Check active song on server");
-            this.setState({needCheckSong:false});
+            this.setState({needCheckSong: false});
         } else {
             console.log("Waiting previous result of check");
             return;
@@ -178,7 +180,7 @@ export default class Song extends Component {
                 } else {
                     console.log("CheckActiveSongOnServer. SAME song=" + this.state.song.id + " on server song=" + response.data)
                 }
-                this.setState({needCheckSong:true});
+                this.setState({needCheckSong: true});
             })
             .catch((error) => {
                 console.error("Error" + error);
@@ -192,7 +194,7 @@ export default class Song extends Component {
     }
 
     changeSelectBox = (optionId) => {
-        document.getElementById(optionId).selected=true;
+        document.getElementById(optionId).selected = true;
     }
     fetchRepertoire = () => {
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT), getOptions())
@@ -216,19 +218,24 @@ export default class Song extends Component {
             });
     }
 
+    closeToast = () => {
+        this.setState({showToast: false})
+    }
+
     render() {
-     //   const {songId, instrument} = this.props;
+        //   const {songId, instrument} = this.props;
         const {songList, activeImage, showToast, error, message} = this.state;
         return (
             <div style={{"margin": 0}} className="Song">
                 <div style={{"display": showToast ? "block" : "none"}}>
                     <ToastMessage
+                        closeToast={this.closeToast}
                         showToast={showToast}
                         error={error}
                         message={message}
                     />
                 </div>
-                <Form>
+                {songList.length>0?<Form>
                     <div style={{"margin": 0}}>
                         <Form.Control
                             style={{"width": "100%", "fontSize": 32}}
@@ -246,12 +253,9 @@ export default class Song extends Component {
                             ))}
                         </Form.Control>
                     </div>
-
-
+                    {activeImage.length>30?
                     <Image src={activeImage} width={"100%"}
-                           height={"100%"}/>
-
-
+                           height={"100%"}/>:''}
                     <div>
                         <Form.Control
                             style={{"width": "100%", "fontSize": 22}}
@@ -282,7 +286,7 @@ export default class Song extends Component {
                             </option>
                         </Form.Control>
                     </div>
-                </Form>
+                </Form>:<img src={logo} className="App-logo" alt="logo"/>}
             </div>
         );
     }
