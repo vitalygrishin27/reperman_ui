@@ -18,7 +18,7 @@ export default class ToastMessage extends Component {
                     show={showToast}>
                     <Toast.Header
                         className={!error ? "bg-success text-white" : "bg-danger text-white"}
-                        closeButton={false}>
+                        closeButton={true}>
                         <strong className={"mr-auto"}>MESSAGE</strong>
                     </Toast.Header>
                     <Toast.Body>
