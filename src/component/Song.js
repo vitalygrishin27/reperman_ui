@@ -1,9 +1,10 @@
 import React, {Component} from "react";
-import {Form, Image} from "react-bootstrap";
+import {Button, Form, Image} from "react-bootstrap";
 import axios from 'axios';
 import ToastMessage from "./ToastMessage";
 import {getEndpoint, getOptions, SONG_MAIN_ENDPOINT} from "./Welcome";
 import logo from "../Loading.png";
+import {Link} from "react-router-dom";
 
 
 export default class Song extends Component {
@@ -236,7 +237,7 @@ export default class Song extends Component {
                         message={message}
                     />
                 </div>
-                {songList.length>0?<Form>
+                {songList.length > 0 ? <Form>
                     <div style={{"margin": 0}}>
                         <Form.Control
                             style={{"width": "100%", "fontSize": 32}}
@@ -254,12 +255,30 @@ export default class Song extends Component {
                             ))}
                         </Form.Control>
                     </div>
-                    {activeImage.length>30?
-                    <Image src={activeImage} width={"100%"}
-                           height={"100%"}/>:''}
+                    {activeImage.length > 30 ?
+                        <Image src={activeImage} width={"100%"}
+                               height={"100%"}/> : ''}
                     <div>
+                        <Button className="card-group"
+                                style={{
+                                    "width": "15%",
+                                    "background": "transparent",
+                                    "fontSize": 14,
+                                    "color": "white",
+                                    "display": "inline"
+                                }}>
+                            <Link style={{"background": "transparent", "fontSize": 14, "color": "white"}}>
+                                NEW
+                            </Link>
+                        </Button>
                         <Form.Control
-                            style={{"width": "100%", "fontSize": 22}}
+                            style={{
+                                "width": "67%",
+                                "fontSize": 22,
+                                "display": "inline",
+                                "margin-right": "5px",
+                                "margin-left": "5px"
+                            }}
                             as="select"
                             onChange={this.changeInstrument}
                             id="inputInstrument"
@@ -286,8 +305,21 @@ export default class Song extends Component {
                                 LYRICS
                             </option>
                         </Form.Control>
+                        <Button className="card-group"
+                                style={{
+                                    "align": "right",
+                                    "width": "15%",
+                                    "background": "transparent",
+                                    "fontSize": 14,
+                                    "color": "white",
+                                    "display": "inline"
+                                }}>
+                            <Link style={{"background": "transparent", "fontSize": 14, "color": "white"}}>
+                                EDIT
+                            </Link>
+                        </Button>
                     </div>
-                </Form>:<img src={logo} className="App-logo" alt="logo"/>}
+                </Form> : <img src={logo} className="App-logo" alt="logo"/>}
             </div>
         );
     }
