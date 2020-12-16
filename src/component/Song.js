@@ -6,8 +6,7 @@ import {getEndpoint, getOptions, SONG_MAIN_ENDPOINT} from "./Welcome";
 import logo from "../Loading.png";
 import bipWav from "../bip.wav";
 import {Link} from "react-router-dom";
-
-const snd = new Audio(bipWav);
+import Metronome from "./Metronome";
 
 export default class Song extends Component {
 
@@ -25,8 +24,8 @@ export default class Song extends Component {
             song: {},
             activeImage: '',
             needCheckSong: true,
-            metronomeDelay: 0,
-            metronomeIntervalID: '',
+            temp: 100,
+            needMetronome: false,
         };
         this.changeSong = this.changeSong.bind(this);
         this.changeSongList = this.changeSongList.bind(this);
@@ -59,21 +58,18 @@ export default class Song extends Component {
     }
 
     updateMetronome = (instrument, temp) => {
-
-        if (this.state.metronomeIntervalID) {
-            clearInterval(this.state.metronomeIntervalID);
+        console.log("NEW Temp for metronome is" + temp);
+        if (instrument == 'DRUMS') {
+            this.setState({
+                needMetronome: true,
+                temp:temp,
+            });
+        }else{
+            this.setState({
+                needMetronome: false,
+                temp:temp,
+            });
         }
-        console.log("NEED Metronome " + this.state.needMetronome + " with temp " + temp);
-        if (instrument !== 'DRUMS') {
-            return;
-        }
-        const metronomeDelay = 1000 / (temp / 60);
-        const metronomeIntervalID = setInterval(this.bep, metronomeDelay);
-        this.setState({metronomeIntervalID: metronomeIntervalID})
-    }
-
-    bep() {
-        snd.play();
     }
 
     setActiveSongOnServer = (songId) => {
@@ -187,20 +183,20 @@ export default class Song extends Component {
 
     checkActiveSongOnServer = () => {
         if (this.state.needCheckSong) {
-            console.log("Check active song on server");
+          //  console.log("Check active song on server");
             this.setState({needCheckSong: false});
         } else {
-            console.log("Waiting previous result of check");
+        //    console.log("Waiting previous result of check");
             return;
         }
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT) + "/activeId", getOptions())
             .then(response => {
                 if (this.state.song.id !== response.data) {
-                    console.log("CheckActiveSongOnServer. old song=" + this.state.song.id + " on server song=" + response.data)
+             //       console.log("CheckActiveSongOnServer. old song=" + this.state.song.id + " on server song=" + response.data)
                     this.changeSelectBox(response.data);
                     this.fetchSongById(response.data);
                 } else {
-                    console.log("CheckActiveSongOnServer. SAME song=" + this.state.song.id + " on server song=" + response.data)
+             //       console.log("CheckActiveSongOnServer. SAME song=" + this.state.song.id + " on server song=" + response.data)
                 }
                 this.setState({needCheckSong: true});
             })
@@ -247,9 +243,10 @@ export default class Song extends Component {
 
     render() {
         //   const {songId, instrument} = this.props;
-        const {songList, activeImage, showToast, error, message} = this.state;
+        const {songList, activeImage, showToast, error, message, needMetronome, temp} = this.state;
         return (
             <div style={{"margin": 0}} className="Song">
+                <Metronome play={needMetronome} temp={temp}/>
                 <div style={{"display": showToast ? "block" : "none"}}>
                     <ToastMessage
                         closeToast={this.closeToast}
@@ -297,8 +294,8 @@ export default class Song extends Component {
                                 "width": "67%",
                                 "fontSize": 22,
                                 "display": "inline",
-                                "margin-right": "5px",
-                                "margin-left": "5px"
+                                "marginRight": "5px",
+                                "marginLeft": "5px"
                             }}
                             as="select"
                             onChange={this.changeInstrument}
