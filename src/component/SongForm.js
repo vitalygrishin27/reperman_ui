@@ -292,7 +292,7 @@ export default class SongForm extends Component {
                 //  this.props.changeSongIdForEdit(-1);
 
                 setTimeout(() => this.setState({"show": false}), 3000);
-                setTimeout(() => this.props.history.push('/songs'), 3000);
+                setTimeout(() => this.props.history.push('/songs'), 200);
             })
             .catch((error) => {
                 console.error("Error" + error);
