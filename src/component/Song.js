@@ -274,8 +274,8 @@ export default class Song extends Component {
                     </div>
                     <div style={{"textAlign":"center"}}>
                     {activeImage.length > 30 ?
-                        <Image src={activeImage} width={"90%"}
-                               height={"90%"}/> : ''}
+                        <Image src={activeImage} width={"95%"}
+                               height={"95%"}/> : ''}
                     </div>
                     <div>
                         <Button className="card-group"
