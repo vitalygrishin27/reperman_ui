@@ -272,9 +272,11 @@ export default class Song extends Component {
                             ))}
                         </Form.Control>
                     </div>
+                    <div style={{"textAlign":"center"}}>
                     {activeImage.length > 30 ?
-                        <Image src={activeImage} width={"800px"}
-                               height={"1080px"}/> : ''}
+                        <Image src={activeImage} width={"90%"}
+                               height={"90%"}/> : ''}
+                    </div>
                     <div>
                         <Button className="card-group"
                                 style={{
