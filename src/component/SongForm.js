@@ -335,6 +335,7 @@ export default class SongForm extends Component {
                                 className="mx-sm-3"
                                 value={song.name}
                                 onChange={this.changeName}
+                                required
                                 id="inputName"
                                 aria-describedby="inputNameHelpInline"
                                 style={{"fontSize": 20, "width": "95%"}}

@@ -299,6 +299,7 @@ export default class SongForm extends Component {
                                 type="text"
                                 className="mx-sm-3"
                                 value={song.name}
+                                required
                                 onChange={this.changeName}
                                 id="inputName"
                                 aria-describedby="inputNameHelpInline"
