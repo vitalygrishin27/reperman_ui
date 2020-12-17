@@ -4,7 +4,6 @@ import axios from 'axios';
 import ToastMessage from "./ToastMessage";
 import {getEndpoint, getOptions, SONG_MAIN_ENDPOINT} from "./Welcome";
 import logo from "../Loading.png";
-import bipWav from "../bip.wav";
 import {Link} from "react-router-dom";
 import Metronome from "./Metronome";
 
@@ -62,12 +61,12 @@ export default class Song extends Component {
         if (instrument == 'DRUMS') {
             this.setState({
                 needMetronome: true,
-                temp:temp,
+                temp: temp,
             });
-        }else{
+        } else {
             this.setState({
                 needMetronome: false,
-                temp:temp,
+                temp: temp,
             });
         }
     }
@@ -94,10 +93,10 @@ export default class Song extends Component {
         let song;
         if (newSongAfterFetch) {
             song = newSongAfterFetch;
-            result = "data:image/png;base64," + song.mainPicture;
+            result = song.mainPicture && song.mainPicture.startsWith("data") ? song.mainPicture : "data:image/png;base64," + song.mainPicture;
         } else {
             song = this.state.song;
-            result = "data:image/png;base64," + this.state.song.mainPicture;
+            result = this.state.song.mainPicture && this.state.song.mainPicture.startsWith("data") ? this.state.song.mainPicture : "data:image/png;base64," + this.state.song.mainPicture;
         }
         this.updateMetronome(instrument, song.temp);
         switch (instrument) {
@@ -105,7 +104,7 @@ export default class Song extends Component {
                 if (song && song.parts && song.parts.length > 0) {
                     song.parts.forEach(function callback(part) {
                         if (part.instrument === "PIANO") {
-                            result = "data:image/png;base64," + part.picture;
+                            result = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
                         }
                     })
                 }
@@ -114,7 +113,7 @@ export default class Song extends Component {
                 if (song && song.parts && song.parts.length > 0) {
                     song.parts.forEach(function callback(part) {
                         if (part.instrument === "GUITAR") {
-                            result = "data:image/png;base64," + part.picture;
+                            result = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
                         }
                     })
                 }
@@ -123,7 +122,7 @@ export default class Song extends Component {
                 if (song && song.parts && song.parts.length > 0) {
                     song.parts.forEach(function callback(part) {
                         if (part.instrument === "BAS") {
-                            result = "data:image/png;base64," + part.picture;
+                            result = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
                         }
                     })
                 }
@@ -132,7 +131,7 @@ export default class Song extends Component {
                 if (song && song.parts && song.parts.length > 0) {
                     song.parts.forEach(function callback(part) {
                         if (part.instrument === "DRUMS") {
-                            result = "data:image/png;base64," + part.picture;
+                            result = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
                         }
                     })
                 }
@@ -141,7 +140,7 @@ export default class Song extends Component {
                 if (song && song.parts && song.parts.length > 0) {
                     song.parts.forEach(function callback(part) {
                         if (part.instrument === "RHYTHM_GUITAR") {
-                            result = "data:image/png;base64," + part.picture;
+                            result = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
                         }
                     })
                 }
@@ -150,13 +149,13 @@ export default class Song extends Component {
                 if (song && song.parts && song.parts.length > 0) {
                     song.parts.forEach(function callback(part) {
                         if (part.instrument === "LYRICS") {
-                            result = "data:image/png;base64," + part.picture;
+                            result = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
                         }
                     })
                 }
                 break;
             default:
-                result = "data:image/png;base64," + song.mainPicture;
+                result = song.mainPicture && song.mainPicture.startsWith("data") ? song.mainPicture : "data:image/png;base64," + song.mainPicture;
         }
         return result;
     }
@@ -183,20 +182,20 @@ export default class Song extends Component {
 
     checkActiveSongOnServer = () => {
         if (this.state.needCheckSong) {
-          //  console.log("Check active song on server");
+            //  console.log("Check active song on server");
             this.setState({needCheckSong: false});
         } else {
-        //    console.log("Waiting previous result of check");
+            //    console.log("Waiting previous result of check");
             return;
         }
         axios.get(getEndpoint(SONG_MAIN_ENDPOINT) + "/activeId", getOptions())
             .then(response => {
                 if (this.state.song.id !== response.data) {
-             //       console.log("CheckActiveSongOnServer. old song=" + this.state.song.id + " on server song=" + response.data)
+                    //       console.log("CheckActiveSongOnServer. old song=" + this.state.song.id + " on server song=" + response.data)
                     this.changeSelectBox(response.data);
                     this.fetchSongById(response.data);
                 } else {
-             //       console.log("CheckActiveSongOnServer. SAME song=" + this.state.song.id + " on server song=" + response.data)
+                    //       console.log("CheckActiveSongOnServer. SAME song=" + this.state.song.id + " on server song=" + response.data)
                 }
                 this.setState({needCheckSong: true});
             })
@@ -332,7 +331,7 @@ export default class Song extends Component {
                                     "color": "white",
                                     "display": "inline"
                                 }}>
-                            <Link style={{"background": "transparent", "fontSize": 14, "color": "white"}}>
+                            <Link style={{"background": "transparent", "fontSize": 14, "color": "white"}} to={"/song"}>
                                 EDIT
                             </Link>
                         </Button>
