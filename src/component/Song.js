@@ -242,7 +242,7 @@ export default class Song extends Component {
 
     render() {
         //   const {songId, instrument} = this.props;
-        const {songList, activeImage, showToast, error, message, needMetronome, temp} = this.state;
+        const {songList, activeImage, showToast, error, message, needMetronome, temp, song} = this.state;
         return (
             <div style={{"margin": 0}} className="Song">
                 <Metronome play={needMetronome} temp={temp}/>
@@ -284,7 +284,7 @@ export default class Song extends Component {
                                     "color": "white",
                                     "display": "inline"
                                 }}>
-                            <Link style={{"background": "transparent", "fontSize": 14, "color": "white"}}>
+                            <Link style={{"background": "transparent", "fontSize": 14, "color": "white"}} to={"/newSong"}>
                                 NEW
                             </Link>
                         </Button>

@@ -9,50 +9,18 @@ export default class SongForm extends Component {
 
     constructor(props) {
         super(props);
-        let basPicture = '';
-        let pianoPicture = '';
-        let drumsPicture = '';
-        let rhythmGuitarPicture = '';
-        let guitarPicture = '';
-        let lyricsPicture = '';
-        if (props.song.parts && props.song.parts.length > 0) {
-            props.song.parts.forEach(function callback(part) {
-                switch (part.instrument) {
-                    case "BAS":
-                        basPicture = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
-                        break;
-                    case "PIANO":
-                        pianoPicture = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
-                        break;
-                    case "DRUMS":
-                        drumsPicture = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
-                        break;
-                    case "RHYTHM_GUITAR":
-                        rhythmGuitarPicture = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
-                        break;
-                    case "GUITAR":
-                        guitarPicture = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
-                        break;
-                    case "LYRICS":
-                        lyricsPicture = part.picture && part.picture.startsWith("data") ? part.picture : "data:image/png;base64," + part.picture;
-                        break;
-                    default:
-                        break;
-                }
-            })
-        }
         this.state = {
-            song: props.song,
+            song: {},
             show: false,
             error: false,
             message: '',
             update: false,
-            basPicture: basPicture,
-            pianoPicture: pianoPicture,
-            drumsPicture: drumsPicture,
-            rhythmGuitarPicture: rhythmGuitarPicture,
-            guitarPicture: guitarPicture,
-            lyricsPicture: lyricsPicture,
+            basPicture: '',
+            pianoPicture: '',
+            drumsPicture: '',
+            rhythmGuitarPicture: '',
+            guitarPicture: '',
+            lyricsPicture: '',
         };
         this.changeName = this.changeName.bind(this);
         this.changeTemp = this.changeTemp.bind(this);
@@ -78,7 +46,6 @@ export default class SongForm extends Component {
     changeName(event) {
         const song = this.state.song;
         song.name = event.target.value;
-        console.log(this.state.song);
         this.setState({update: true})
     }
 
@@ -200,12 +167,11 @@ export default class SongForm extends Component {
     createSongType() {
         const song = this.state.song;
         const parts = [];
-        console.log("wqeqweqweqwe");
-        console.log(this.isPartsNotExists());
         if (this.isPartsNotExists()) {
             song.parts = parts;
             return song;
         }
+
         if (this.state.basPicture != '') {
             let part = {};
             part.instrument = 'BAS'
@@ -242,7 +208,6 @@ export default class SongForm extends Component {
             part.picture = this.state.lyricsPicture;
             parts.push(part);
         }
-        console.log(parts);
         song.parts = parts;
         return song;
     }
@@ -567,7 +532,7 @@ export default class SongForm extends Component {
                         <Form.Group as={Col} style={{"text-align": "center"}}>
                             <Button style={{"width": "70%"}} size={"lg"} variant={"danger"}>
                                 <Link style={{"background": "transparent", "fontSize": 20, "color": "white"}} to={"/songs"}>
-                                   Cancel
+                                    Cancel
                                 </Link>
                             </Button>
                         </Form.Group>
