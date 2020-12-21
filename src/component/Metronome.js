@@ -59,12 +59,12 @@ export default class Metronome extends Component {
     }*/
 
     playClick() {
-        console.log("METRONOME: PLAYCLICK");
+  /*      console.log("METRONOME: PLAYCLICK");
         if (this.state.count === 0) this.click2.play();
         else this.click1.play();
         this.setState({
             count: this.state.count + 1
-        });
+        });*/
     }
 
  /*   startStop() {
